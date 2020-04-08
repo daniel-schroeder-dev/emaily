@@ -5,10 +5,13 @@ const passport = require('passport');
 const morgan = require('morgan');
 const GoogleStrategy = require('passport-google-oauth20').Strategy;
 
+const authRouter = require('./routes/authRouter');
+
 const app = express();
 const PORT = process.env.PORT || 5000;
 
 app.use(morgan('dev'));
+app.use(passport.initialize());
 
 passport.use(new GoogleStrategy({
     clientID: process.env.GOOGLE_CLIENT_ID,
@@ -16,17 +19,16 @@ passport.use(new GoogleStrategy({
     callbackURL: '/auth/google/callback',
   },
   (accessToken, refreshToken, profile, done) => {
-    console.log(accessToken, refreshToken, profile);
+    done(null, { profile });
   }
 ));
 
-app.get('/auth/google', passport.authenticate('google', { scope: ['profile'] }));
+app.use('/auth/google', authRouter);
 
-app.get('/auth/google/callback', passport.authenticate('google'));
-
-app.get('/login', (req, res, next) => {
-  res.send('fail');
+app.get('/', (req, res, next) => {
+  res.send('Homepage route');
 });
+
 
 app.listen(PORT, () => {
   console.log(`Express app up at port: ${PORT}`);
