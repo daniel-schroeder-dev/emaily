@@ -11,8 +11,9 @@ const PORT = process.env.PORT || 5000;
 app.use(morgan('dev'));
 app.use(passport.initialize());
 
-require('./services/passport');
 require('./db/connect');
+require('./models/user');
+require('./services/passport');
 
 app.use('/auth/google', authRouter);
 
