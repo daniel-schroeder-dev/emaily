@@ -10,8 +10,13 @@ passport.use(new GoogleStrategy({
     callbackURL: '/auth/google/callback',
   },
   (accessToken, refreshToken, profile, done) => {
-    const user = new User({ googleId: profile.id });
-    user.save()
+
+    const userInfo = { googleId: profile.id };
+    
+    User.findOne(userInfo)
+      .then(user => {
+        return user ? Promise.resolve(user) : new User(userInfo).save();
+      })
       .then(user => done(null, user))
       .catch(done);
   }
