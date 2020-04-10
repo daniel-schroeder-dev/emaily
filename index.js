@@ -6,6 +6,7 @@ const passport = require('passport');
 const cookieSession = require('cookie-session');
 
 const authRouter = require('./routes/authRouter');
+const apiRouter = require('./routes/apiRouter');
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -23,18 +24,10 @@ require('./models/user');
 require('./services/passport');
 
 app.use('/auth/google', authRouter);
+app.use('/api', apiRouter);
 
 app.get('/', (req, res, next) => {
   res.send('Homepage route');
-});
-
-app.get('/api/current_user', (req, res, next) => {
-  res.json(req.user);
-});
-
-app.get('/api/logout', (req, res, next) => {
-  req.logout();
-  res.send(req.user);
 });
 
 app.listen(PORT, () => {
