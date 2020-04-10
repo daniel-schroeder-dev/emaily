@@ -1,9 +1,10 @@
 require('dotenv').config();
 
 const express = require('express');
+const morgan = require('morgan');
 const passport = require('passport');
 const cookieSession = require('cookie-session');
-const morgan = require('morgan');
+
 const authRouter = require('./routes/authRouter');
 
 const app = express();
@@ -25,6 +26,15 @@ app.use('/auth/google', authRouter);
 
 app.get('/', (req, res, next) => {
   res.send('Homepage route');
+});
+
+app.get('/api/current_user', (req, res, next) => {
+  res.json(req.user);
+});
+
+app.get('/api/logout', (req, res, next) => {
+  req.logout();
+  res.send(req.user);
 });
 
 app.listen(PORT, () => {
