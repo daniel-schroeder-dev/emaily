@@ -14,7 +14,7 @@ const PORT = process.env.PORT || 5000;
 app.use(morgan('dev'));
 app.use(cookieSession({
   maxAge: 30 * 24 * 60 * 60 * 1000, // 30 days
-  keys: [process.env.COOKIE_KEY],
+  secret: process.env.COOKIE_SECRET,
 }));
 app.use(passport.initialize());
 app.use(passport.session());
